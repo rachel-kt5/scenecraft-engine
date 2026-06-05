@@ -1,6 +1,11 @@
 export type CanvasObject = {
     id: number;
-    type:"shape";
+    type: "shape";
     x: number;
     y: number;
 };
+export type MoveObject = (
+    id: number,
+    x: number,
+    y: number,
+) => void;
