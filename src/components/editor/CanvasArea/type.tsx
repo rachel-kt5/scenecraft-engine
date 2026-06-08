@@ -9,3 +9,6 @@ export type MoveObject = (
     x: number,
     y: number,
 ) => void;
+export type DuplicateObject = (
+    id: number,
+) => number | null ;

@@ -10,6 +10,7 @@ export default function EditorShell() {
 
   const [selectedObjectId, setSelectedObjectId] = useState<number | null>(null);
   const [objects, setObjects] = useState<CanvasObject[]>([]);
+  const [isCtrlPressed, setIsCtrlPressed] = useState(false);
   const addObject = () => {
     setObjects([
       ...objects,
@@ -18,6 +19,7 @@ export default function EditorShell() {
         type: "shape",
         x: 200,
         y: 200,
+        
       },
     ]);
   };
@@ -35,23 +37,62 @@ export default function EditorShell() {
   const deleleObject = () => {
     if (selectedObjectId === null) return;
     setObjects(
-      objects.filter(
-        object => object.id !== selectedObjectId
-      ));
-    setSelectedObjectId(null);
+      objects.filter((object) => {
+        console.log(
+          object.id,
+          object.id !== selectedObjectId
+        );
+        return object.id !== selectedObjectId;
+      })
+    );
   };
   useEffect(() => {
+    console.log("effect mounted");
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Delete") {
+      console.log("key pressed:", event.key);
+      if (event.key === "Delete" || event.key === "Backspace") {
         console.log(event.key);
         deleleObject();
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedObjectId, objects]);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Control") {
+        setIsCtrlPressed(true);
+      }
+    };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === "Control") {
+        setIsCtrlPressed(false)
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+  }, []);
+
+  console.log("Ctrl:", isCtrlPressed);
+
+  const duplicateObject = (id: number) => {
+    const object = objects.find(
+      (object) => object.id === id
+    );
+    if (!object) return null;
+    const newObject = {
+      ...object,
+      id: Date.now(),
+      x: object.x,
+      y: object.y,
+    };
+    setObjects([
+      ...objects, newObject,
+    ]);
+    return newObject.id;
+  };
   return (
     <div className="h-screen flex flex-col">
 
@@ -62,6 +103,8 @@ export default function EditorShell() {
           selectedObjectId={selectedObjectId}
           setSelectedObjectId={setSelectedObjectId}
           moveObject={MoveObject}
+          isCtrlPressed={isCtrlPressed}
+          duplicateObject={duplicateObject}
         />
         <Sidebar />
       </div>

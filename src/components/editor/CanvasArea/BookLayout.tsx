@@ -1,19 +1,23 @@
 import React, { useState, useRef } from "react";
 import { CanvasObject } from "./type";
 import { MoveObject } from "./type";
+import { DuplicateObject } from "./type";
+
 
 type BookLayoutProp = {
     objects: CanvasObject[];
     selectedObjectId: number | null;
     setSelectedObjectId: React.Dispatch<React.SetStateAction<number | null>>;
     moveObject: MoveObject;
+    isCtrlPressed: boolean;
+    duplicateObject: DuplicateObject;
 };
 export default function BookLayout(
-    { objects, selectedObjectId, setSelectedObjectId, moveObject, }: BookLayoutProp) {
-    console.log(selectedObjectId);
+    { objects, selectedObjectId, setSelectedObjectId, moveObject, isCtrlPressed, duplicateObject }: BookLayoutProp) {
+
+    console.log("Ctrl:", isCtrlPressed);
     const [draggedObjectId, setDraggedObjectId] = useState<number | null>(null);
     const bookref = useRef<HTMLDivElement>(null);
-
     const [dragOffset, setDragOffset] = useState({
         x: 0,
         y: 0,
@@ -22,6 +26,7 @@ export default function BookLayout(
     return (<div ref={bookref}
         className="flex-1 bg-gray-200 flex items-center justify-center p-8"
         onMouseMove={(e) => {
+
             const rect = bookref.current?.getBoundingClientRect();
             if (draggedObjectId === null) return;
             e.stopPropagation();
@@ -47,6 +52,11 @@ export default function BookLayout(
                         key={object.id}
                         onClick={() => setSelectedObjectId(object.id)}
                         onMouseDown={(e) => {
+                            if (isCtrlPressed) {
+                                duplicateObject(object.id)
+                                const newObjectId =object.id;
+                                setDraggedObjectId(newObjectId)
+                            }
                             const rect = bookref.current?.getBoundingClientRect();
                             if (!rect) return;
                             const mouseX = e.clientX - rect.left;
@@ -58,7 +68,7 @@ export default function BookLayout(
                             console.log("drag start", object.id);
                             setDraggedObjectId(object.id)
                         }}
-                        className={`absolute w-40 h-40 bg-blue-400 rounded-lg
+                        className={`absolute w-40 h-40 bg-pink-400 rounded-lg
                             ${selectedObjectId === object.id ? "shadow-[0_0_15px_5px_rgba(120,120,120,0.5)]" : ""}`}
                         style={{
                             left: object.x,
