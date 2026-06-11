@@ -3,7 +3,7 @@ import BookLayout from "./BookLayout";
 import { CanvasObject } from "./type";
 import { MoveObject as MoveObjectType} from "./type";
 import { DuplicateObject } from "./type";
-
+import {ResizeObject} from "./type";
 
 type CanvasAreaProps={
     objects:CanvasObject[];
@@ -12,10 +12,11 @@ type CanvasAreaProps={
     moveObject: MoveObjectType;
     isCtrlPressed:boolean;
     duplicateObject:DuplicateObject;
+    ResizeObject:ResizeObject;
 };
 
 export default function CanvasArea( {   
-  objects,selectedObjectId,setSelectedObjectId, moveObject,isCtrlPressed,duplicateObject
+  objects,selectedObjectId,setSelectedObjectId, moveObject,isCtrlPressed,duplicateObject,ResizeObject
 }: CanvasAreaProps) {
   return (
     <div className="flex-1 bg-gray-200 flex items-center justify-center p-8">
@@ -26,6 +27,7 @@ export default function CanvasArea( {
       moveObject={moveObject}
       isCtrlPressed={isCtrlPressed}
       duplicateObject={duplicateObject}
+      ResizeObject={ResizeObject}
       />
 
     </div>

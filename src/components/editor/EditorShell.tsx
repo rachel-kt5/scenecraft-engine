@@ -11,6 +11,7 @@ export default function EditorShell() {
   const [selectedObjectId, setSelectedObjectId] = useState<number | null>(null);
   const [objects, setObjects] = useState<CanvasObject[]>([]);
   const [isCtrlPressed, setIsCtrlPressed] = useState(false);
+  
   const addObject = () => {
     setObjects([
       ...objects,
@@ -19,7 +20,8 @@ export default function EditorShell() {
         type: "shape",
         x: 200,
         y: 200,
-        
+        width: 300,
+        height: 100,
       },
     ]);
   };
@@ -34,24 +36,22 @@ export default function EditorShell() {
       )
     );
   }
+
   const deleleObject = () => {
     if (selectedObjectId === null) return;
     setObjects(
       objects.filter((object) => {
-        console.log(
-          object.id,
-          object.id !== selectedObjectId
-        );
+
         return object.id !== selectedObjectId;
       })
     );
   };
   useEffect(() => {
-    console.log("effect mounted");
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log("key pressed:", event.key);
+      //console.log("key pressed:", event.key);
       if (event.key === "Delete" || event.key === "Backspace") {
-        console.log(event.key);
+        //console.log(event.key);
         deleleObject();
       }
     };
@@ -75,7 +75,7 @@ export default function EditorShell() {
     document.addEventListener("keyup", handleKeyUp);
   }, []);
 
-  console.log("Ctrl:", isCtrlPressed);
+  
 
   const duplicateObject = (id: number) => {
     const object = objects.find(
@@ -87,11 +87,27 @@ export default function EditorShell() {
       id: Date.now(),
       x: object.x,
       y: object.y,
+      width: object.width,
+      heigth: object.height,
     };
     setObjects([
       ...objects, newObject,
     ]);
     return newObject.id;
+  };
+  const ResizeObject = (
+    id: number,
+    x:number,
+    y:number,
+    width: number,
+    height: number,
+  ) => {
+    
+    setObjects(
+      objects.map((Object) =>
+        Object.id === id ? { ...Object,x,y, width, height, } : Object
+      )
+    );
   };
   return (
     <div className="h-screen flex flex-col">
@@ -105,6 +121,7 @@ export default function EditorShell() {
           moveObject={MoveObject}
           isCtrlPressed={isCtrlPressed}
           duplicateObject={duplicateObject}
+          ResizeObject={ResizeObject}
         />
         <Sidebar />
       </div>
