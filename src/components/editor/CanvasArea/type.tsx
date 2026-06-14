@@ -8,6 +8,7 @@ export type CanvasObject = {
     y: number;
     width:number,
     height:number,
+    zIndex:number,
 };
 export type MoveObject = (
     id: number,
@@ -38,3 +39,15 @@ export type ResizeObject=(
     objectWidth:number,
     objectHeight:number,
  }
+ export type bringToFront=(
+    id:number
+ )=>void;
+ export type sendToBack=(
+    id:number
+ )=>void;
+  export type bringForword=(
+    id:number
+ )=>void;
+  export type sendBackword=(
+    id:number
+ )=>void;

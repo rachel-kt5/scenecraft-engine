@@ -1,4 +1,8 @@
-export default function Sidebar() {
-  return <div className="w-64 border-l p-4">
-      Sidebar</div>;
+
+export default function Sidebar(){
+   return (
+    <div className="h-14 border-b flex items-center px-4">
+      Sidebar
+    </div>
+  );
 }
